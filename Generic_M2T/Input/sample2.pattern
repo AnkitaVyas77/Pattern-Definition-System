@@ -1,0 +1,43 @@
+Project_Path : "ca.mcgill.devops.pipeline" // LOCATION OF THE PROJECT
+Pipeline { 
+    (Configuration)PipelineConfiguration{
+        {
+            (String)name,
+            
+            (Event)Triggers* Ordered{ 
+                {
+                    (PipelineEventKeyword)name : "pull_request:",
+                    (Event)Triggers* Ordered{ 
+                                {
+                                (PipelineEventKeyword)name : "push:",
+            
+                            
+                                (Event)Triggers* Ordered{ 
+                                        {
+                                    (PipelineEventKeyword)name : "push:"
+            
+                                        }
+                                },
+                                (Event)Triggers* Ordered{ 
+                                    {
+                                    (PipelineEventKeyword)name : "push:"
+            
+                                    }
+                        
+                                }
+            
+                            }
+                }
+    
+            
+        
+          }
+    }
+    }
+    }    
+}
+        
+    
+
+ 
+

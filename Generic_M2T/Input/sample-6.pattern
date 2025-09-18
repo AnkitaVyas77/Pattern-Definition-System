@@ -1,0 +1,35 @@
+Project_Path : "ca.mcgill.devops.pipeline" // LOCATION OF THE PROJECT
+Pipeline { 
+    (Stage)Stages*{
+        {
+        (Job)Jobs*{
+            {
+                (String)name: "deploy",
+            
+        
+                (ParameterValue)JobParameterValues*{
+            
+                    {
+                        (PipelineKeyword)name: "name:"
+            
+                    }
+                
+                
+                
+                    }
+            }       
+        }
+        
+    }
+    
+    }
+
+}
+
+    
+    
+    
+
+ 
+
+    

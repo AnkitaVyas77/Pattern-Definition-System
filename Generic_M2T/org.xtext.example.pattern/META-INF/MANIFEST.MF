@@ -1,0 +1,33 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.xtext.example.pattern
+Bundle-ManifestVersion: 2
+Bundle-Name: org.xtext.example.pattern
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: org.xtext.example.pattern; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.19.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.38.0",
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ org.eclipse.xtext.ide;bundle-version="2.38.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: org.example.pattern,
+ org.example.pattern.generator,
+ org.example.pattern.scoping,
+ org.example.pattern.validation,
+ org.xtext.example.pattern,
+ org.xtext.example.pattern.generator,
+ org.xtext.example.pattern.parser.antlr,
+ org.xtext.example.pattern.parser.antlr.internal,
+ org.xtext.example.pattern.pattern,
+ org.xtext.example.pattern.pattern.impl,
+ org.xtext.example.pattern.pattern.util,
+ org.xtext.example.pattern.scoping,
+ org.xtext.example.pattern.serializer,
+ org.xtext.example.pattern.services,
+ org.xtext.example.pattern.validation
+Import-Package: org.apache.log4j

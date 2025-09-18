@@ -1,0 +1,48 @@
+grammar org.xtext.example.pattern.Pattern with org.eclipse.xtext.common.Terminals
+
+generate pattern "http://www.xtext.org/example/pattern/Pattern"
+
+// Project path is optional, but must appear before any root class
+Pattern:
+    ('Project_Path' ':' projectPath=STRING)?    // Accepts Project_path : "ca.mcgill.devops.pipeline"
+    rootClasses+=RootClass+;
+
+RootClass:
+    rootName=ID '{'
+        relations+=Relation (',' relations+=Relation)*
+    '}'
+;
+
+
+Relation:
+	'(' className=ID ')' relationshipName=ID (isList?='*')? (isOrdered?='Ordered')?
+	'{' (featureList+=FeatureList)? (',' featureList+=FeatureList )* '}'
+	;
+ 
+FeatureList:
+	'{' features+=Feature (',' features+=Feature)* '}' ;
+
+Feature:
+    Relation | Enumeration | Attribute
+;
+
+Attribute:
+    '(' type=PrimitiveType ')' attributeName=ID (':' value=STRING)?
+;
+
+Enumeration:
+    '(' type=ID ')' enumName=ID ':' value=STRING
+;
+
+PrimitiveType:
+    'String'  | // maps to java.lang.String
+    'Boolean' | // maps to boolean
+    'Int'     | // maps to int
+    'Long'    | // maps to long
+    'Short'   | // maps to short
+    'Byte'    | // maps to byte
+    'Float'   | // maps to float
+    'Double'  | // maps to double
+    'Char'     // maps to char
+    
+;

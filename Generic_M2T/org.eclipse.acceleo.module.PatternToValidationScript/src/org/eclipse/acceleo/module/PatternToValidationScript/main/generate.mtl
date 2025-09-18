@@ -1,0 +1,393 @@
+[comment encoding = "UTF-8"/]
+[module generate('http://www.xtext.org/example/pattern/Pattern')]
+
+
+[template public generate(pattern : Pattern)]
+[comment @main/]
+[file('ValidationScript_' + pattern.rootClasses->first().rootName + '.java', false, 'UTF-8')]
+
+[generateImports(pattern)/]
+public class PatternToValidationScript {
+
+[generateDispatcher(pattern)/]
+
+
+[for (r : RootClass | pattern.rootClasses)]
+[generateMatchMethod(r)/]
+[for (rel : Relation | r.relations)]
+  
+  [let relsSeq : Sequence(Relation) = r.relations->asSequence()]
+  [let pos     : Integer           = relsSeq->indexOf(rel)]
+  [let dup : Integer = relsSeq->select(x | x.className = rel.className and x.relationshipName = rel.relationshipName)->size() ]
+  [let occ     : Integer =
+       relsSeq
+        ->subSequence(1, pos)
+        ->select(x | x.className = rel.className and
+                      x.relationshipName = rel.relationshipName)
+        ->size()
+  ]
+  [let topSuffix : String = '_' + ('' + occ)]
+
+  [generateRelationTreeWithSuffix(rel, r.rootName, topSuffix)/]      
+  [generateRelationTree(rel, r.rootName, topSuffix)/]                
+
+
+                      
+
+  [/let]
+  [/let]
+  [/let]
+  [/let]
+  [/let]
+[/for]
+
+[/for]
+
+[generateResourceLoadMethod(pattern)/]
+
+[generateMainMethod(pattern)/]
+}
+[/file]
+[/template]
+
+[template private generateRelationTree(rel : Relation, parentType : String, parentSuffix : String)]
+  [for (block : FeatureList | rel.featureList)]
+    [for (f : Feature | block.features)]
+      [if f.oclIsKindOf(Relation)]
+        [let subRel : Relation = f.oclAsType(Relation)]
+          [let flat : Sequence(Feature) =
+               (rel.featureList->collect(b | b.features)->flatten())->asSequence()
+          ]
+          [let pos  : Integer = flat->indexOf(f)]
+         [let dupCount : Integer = flat->select(g | g.oclIsKindOf(Relation) and g.oclAsType(Relation).className = subRel.className and g.oclAsType(Relation).relationshipName = subRel.relationshipName) ->size() ]
+          [let occ  : Integer =
+               flat->subSequence(1, pos)
+                   ->select(g | g.oclIsKindOf(Relation) and
+                                g.oclAsType(Relation).className = subRel.className and
+                                g.oclAsType(Relation).relationshipName = subRel.relationshipName)
+                   ->size()
+          ]
+
+          [let childSuffix : String = parentSuffix + '_' + ('' + occ)]
+
+          [generateRelationTreeWithSuffix(subRel, rel.className, childSuffix)/] 
+          [generateRelationTree(subRel, rel.className, childSuffix)/]           
+
+        [/let][/let][/let][/let][/let][/let]
+      [/if]
+    [/for]
+  [/for]
+[/template]
+
+
+
+[template private generateRelationTreeWithSuffix(rel : Relation, parentType : String, nameSuffix : String)]
+  [generateRelationMethodsWithSuffix(rel, parentType, nameSuffix)/]
+[/template]
+
+
+
+
+
+[template protected generateImports(pattern : Pattern)]
+package [if (pattern.projectPath <> null)][pattern.projectPath/].resourceloader[else]generated[/if];
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.Issue;
+import org.eclipse.emf.common.util.EList;
+
+import com.google.inject.Injector;
+import [pattern.projectPath/].[pattern.rootClasses->first().rootName/]StandaloneSetup;
+import [pattern.projectPath/].[pattern.rootClasses->first().rootName.toLowerCase()/].*;
+[/template]
+
+[template protected generateDispatcher(pattern : Pattern)]
+private static boolean matchesPattern(EObject root) {
+    [for (r : RootClass | pattern.rootClasses)]
+    if (root instanceof [r.rootName/]) {
+        return [ 'matchesPattern' + r.rootName /]((([r.rootName/]) root));
+    }
+    [/for]
+    return false;
+}
+[/template]
+
+[template protected generateMatchMethod(r : RootClass)]
+private static boolean matchesPattern[r.rootName/]([r.rootName/] root) {
+    return 
+    [for (rel : Relation | r.relations)]
+      [let rels : OrderedSet(Relation) = r.relations]
+      [let pos  : Integer = rels->indexOf(rel)]
+      [let dup  : Integer =
+           rels->select(x | x.className = rel.className and
+                         x.relationshipName = rel.relationshipName)->size()
+      ]
+      [let occ  : Integer =
+           rels->subOrderedSet(1, pos) 
+            ->select(x | x.className = rel.className and
+                              x.relationshipName = rel.relationshipName)->size()
+      ]
+     [let topSuffix : String = '_' + ('' + occ)]
+      matches[rel.className/][rel.relationshipName.toUpperFirst()/][topSuffix/](root) [if rel <> r.relations->last()] && [/if]
+      [/let]
+      [/let]
+      [/let]
+      [/let]
+     [/let]
+    [/for] ;
+}
+[/template]
+
+
+
+[template protected generateRelationMethodsWithSuffix(rel : Relation, className : String, nameSuffix : String)]
+//template protected generateRelationMethods(rel : Relation, className : String)]
+//Relation: [rel.relationshipName/]
+private static boolean matches[rel.className/][rel.relationshipName.toUpperFirst()/][nameSuffix/]([className/] classElem ) {
+    boolean has[rel.relationshipName/] = false;
+    
+    
+         [if (rel.featureList->isEmpty()) ]
+            // --- presence only relation (like Steps etc) ---
+            if (classElem.get[rel.relationshipName.toUpperFirst()/]() != null) {
+            has[rel.relationshipName/] = true;
+            }
+        return has[rel.relationshipName/];
+        [else]
+        int matchedBlocks = 0;
+        [if (rel.isOrdered)] int [rel.relationshipName/]state= 1; [/if]
+        [if rel.isList = true] List<Integer> [rel.relationshipName/]MatchedIdx = new ArrayList<>(); [/if]
+
+        [let idxSeq : Sequence(Integer) = rel.featureList->iterate(b; acc : Sequence(Integer) = Sequence{} | acc->append(acc->size()))]
+        [for (block : FeatureList | rel.featureList)]
+            [let i : Integer = idxSeq->at(rel.featureList->indexOf(block))+1]
+
+            [if (rel.isOrdered)] if ([rel.relationshipName/]state == [i/]) [/if] {
+                //int ind =0;
+
+                
+                
+                [if rel.isList = true]
+                    int [rel.relationshipName/]StartIdx = 0;
+                    [if rel.isOrdered]
+                        if ([rel.relationshipName/]MatchedIdx != null && ![rel.relationshipName/]MatchedIdx.isEmpty()) {
+                        [rel.relationshipName/]StartIdx =[rel.relationshipName/]MatchedIdx.get([rel.relationshipName/]MatchedIdx.size() - 1);
+                        }
+                    [/if]
+
+
+                    List<[rel.className/]> listOf[rel.relationshipName.toUpperFirst()/] = classElem.get[rel.relationshipName.toUpperFirst()/]();
+    
+                    for (int [rel.relationshipName/]idx = [rel.relationshipName/]StartIdx; [rel.relationshipName/]idx < listOf[rel.relationshipName.toUpperFirst()/].size(); [rel.relationshipName/]idx++) {
+                    [rel.className/] [rel.className/][rel.relationshipName/]Elem = listOf[rel.relationshipName.toUpperFirst()/].get([rel.relationshipName/]idx);
+       
+                [else]
+    
+                    [rel.className/] [rel.className/][rel.relationshipName/]Elem = classElem.get[rel.relationshipName.toUpperFirst()/]();
+                    if ([rel.className/][rel.relationshipName/]Elem == null) return false;
+                
+                [/if]
+                
+
+                int blockCounter = 0;
+                //ind += 1 ;
+
+                [if rel.isList = true] if (!([rel.relationshipName/]MatchedIdx.contains([rel.relationshipName/]idx)))  { [/if]
+                
+
+                
+                [for (f : Feature | block.features)]
+                    
+                    [if f.oclIsKindOf(Attribute)]
+                        [let attr : Attribute = f.oclAsType(Attribute)]
+                            [attr.type/] [attr.type/][attr.attributeName/]Elem = [rel.className/][rel.relationshipName/]Elem.get[attr.attributeName.toUpperFirst()/]();
+                            if ([attr.type/][attr.attributeName/]Elem != null [if attr.value <> null] && [attr.type/][attr.attributeName/]Elem.equals("[attr.value/]")[/if]) {
+                                blockCounter += 1;
+                            }
+                        [/let]
+                    [/if]
+                    [if f.oclIsKindOf(Enumeration)]
+                        [let en : Enumeration = f.oclAsType(Enumeration)]
+                            [en.type/] [en.type/][en.enumName/]Elem = [rel.className/][rel.relationshipName/]Elem.get[en.enumName.toUpperFirst()/]();
+                            if ([en.type/][en.enumName/]Elem != null && [en.type/][en.enumName/]Elem.getLiteral().equals("[en.value/]")) {
+                                blockCounter += 1;
+                            }
+                        [/let]
+                    [/if]
+                    [if f.oclIsKindOf(Relation)]
+                        
+                          [let subRel : Relation = f.oclAsType(Relation)]
+                          [let flat : Sequence(Feature) =
+                               (rel.featureList->collect(b | b.features)->flatten())->asSequence()
+                          ]
+                          [let pos  : Integer = flat->indexOf(f)]
+                         [let occ  : Integer =
+                               flat->subSequence(1, pos)
+                                   ->select(g | g.oclIsKindOf(Relation) and
+                                                g.oclAsType(Relation).className = subRel.className and
+                                                g.oclAsType(Relation).relationshipName = subRel.relationshipName)
+                                   ->size()
+                          ]
+                            
+                            [let dup : Integer = flat->select(g | g.oclIsKindOf(Relation) and g.oclAsType(Relation).className = subRel.className and g.oclAsType(Relation).relationshipName = subRel.relationshipName) ->size()]
+                            [let childSuffix : String = nameSuffix + '_' + ('' + occ)]
+
+                            // **CALL** the nested match function with the same childSuffix the declaration uses:
+                            if ( matches[subRel.className/][subRel.relationshipName.toUpperFirst()/][childSuffix/]([rel.className/][rel.relationshipName/]Elem) ) {
+      
+                            blockCounter++;
+                        }
+                        [/let][/let][/let][/let][/let][/let]
+                    [/if]
+                    
+                    
+                [/for] 
+
+                if (blockCounter == [block.features->size()/]) {
+                    matchedBlocks++;
+                    [if (rel.isOrdered)]
+                        [rel.relationshipName/]state++ ;
+                    [/if]
+                        [if rel.isList = true] [rel.relationshipName/]MatchedIdx.add([rel.relationshipName/]idx);[/if]
+                    
+                    [if rel.isList] break; 
+                        }[/if]
+                        
+                    }
+                }
+            [if rel.isList] } [/if]
+        [/let][/for]
+
+        
+        if (matchedBlocks == [rel.featureList->size()/]) {
+            has[rel.relationshipName/] = true;
+            
+        }
+    
+
+    return has[rel.relationshipName/]; 
+    [/let][/if]
+
+}
+
+[/template]
+
+
+
+
+
+
+
+
+
+
+[template public generateResourceLoadMethod(pattern : Pattern)]
+public static [pattern.rootClasses.rootName/] resourceLoad(String resourcePath, String fileName) {
+    try {
+        
+        Injector injector = new [pattern.rootClasses.rootName/]StandaloneSetup().createInjectorAndDoEMFRegistration();
+        XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+        resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+
+        // Ensure consistent file path without duplicate slashes
+        String normalizedPath = Paths.get(resourcePath, fileName).toString().replace("\\", "/");
+        String inputURI = "file:///" + normalizedPath;
+
+
+
+        URI uri = URI.createURI(inputURI);
+        Resource xtextResource = resourceSet.getResource(uri, true);
+
+        IResourceValidator resourceValidator = injector.getInstance(IResourceValidator.class);
+        Iterable<Issue> issues = resourceValidator.validate(xtextResource, CheckMode.ALL, CancelIndicator.NullImpl);
+        // Print validation issues
+        int issueCounter = printValidationIssues(issues);
+        EcoreUtil.resolveAll(xtextResource);
+
+        if (issueCounter == 0) {
+            return ([pattern.rootClasses.rootName/]) xtextResource.getContents().get(0);
+        } else {
+            System.out.println("File skipped due to validation issues: " + fileName);
+            return null;
+        }
+    } catch (Exception e) {
+        System.err.println("Error reading or parsing file: " + fileName + " - " + e.getMessage());
+        return null;
+    }
+}
+
+private static int printValidationIssues(Iterable<Issue> issues) {
+    int counter = 0;
+    for (Issue issue : issues) {
+        counter++;
+    }
+    return counter;
+}
+[/template]
+
+
+[template protected generateMainMethod(pattern : Pattern)]
+public static void main(String['[]'/] args) {
+     String datasetPath = "/Users/ankita/Desktop/sample_V3_dataset"; //V3_DatasetTest
+        String fileExtension = ".Pipeline"; // e.g. “.Pipeline” or whatever your DSL uses
+        String outputNonMatching = "/Users/ankita/Desktop/Thesis-work/Generic M2T metrics/non_matching_files_all_files.txt";
+        String outputInvalid = "/Users/ankita/Desktop/Thesis-work/Generic M2T metrics/invalid_files_all_files.txt";
+        String outputMatching = "/Users/ankita/Desktop/Thesis-work/Generic M2T metrics/Patternmatching_files_all_files.txt";
+
+    File folder = new File(datasetPath);
+    File['[]'/] allFiles = folder.listFiles();
+    if (allFiles == null || allFiles.length == 0) {
+        System.out.println("No files found.");
+        return;
+    }
+
+    List<String> matches = new ArrayList<>();
+    List<String> nonMatches = new ArrayList<>();
+    List<String> invalids = new ArrayList<>();
+    int validated = 0;
+
+    for (File f : allFiles) {
+        if (!f.getName().endsWith(fileExtension)) continue;
+        [pattern.rootClasses.rootName/] model = resourceLoad(datasetPath, f.getName());
+        if (model == null) {
+            invalids.add(f.getName());
+            continue;
+        }
+        validated++;
+        if (matchesPattern(model)) {
+            matches.add(f.getName());
+        } else {
+            nonMatches.add(f.getName());
+        }
+    }
+
+    try { Files.write(Paths.get(outputMatching), matches); } catch (IOException e) {}
+    try { Files.write(Paths.get(outputNonMatching), nonMatches); } catch (IOException e) {}
+    try { Files.write(Paths.get(outputInvalid), invalids); } catch (IOException e) {}
+
+   
+    //System.out.println("Validated: " + validated + ", Matches: " + matches.size());
+    System.out.println("Successfully validated files: " + validated);
+    System.out.println("Files matching pattern: " + matches.size());
+    double percentageMatching = validated > 0 ? ((double) matches.size() / validated) * 100 : 0;
+    System.out.println("Percentage matching (matchingFiles / validatedFiles): " + percentageMatching + "%");
+}
+[/template]
