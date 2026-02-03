@@ -167,7 +167,7 @@ private static boolean matches[rel.className/][rel.relationshipName.toUpperFirst
     
          [if (rel.featureList->isEmpty()) ]
             // --- presence only relation (like Steps etc) ---
-            if (classElem.get[rel.relationshipName.toUpperFirst()/]() != null) {
+            if (classElem.get[rel.relationshipName.toUpperFirst()/]() != null && !(classElem.get[rel.relationshipName.toUpperFirst()/]().isEmpty())) {
             has[rel.relationshipName/] = true;
             }
         return has[rel.relationshipName/];
@@ -194,15 +194,40 @@ private static boolean matches[rel.className/][rel.relationshipName.toUpperFirst
                     [/if]
 
 
-                    List<[rel.className/]> listOf[rel.relationshipName.toUpperFirst()/] = classElem.get[rel.relationshipName.toUpperFirst()/]();
-    
-                    for (int [rel.relationshipName/]idx = [rel.relationshipName/]StartIdx; [rel.relationshipName/]idx < listOf[rel.relationshipName.toUpperFirst()/].size(); [rel.relationshipName/]idx++) {
-                    [rel.className/] [rel.className/][rel.relationshipName/]Elem = listOf[rel.relationshipName.toUpperFirst()/].get([rel.relationshipName/]idx);
+                    // Reflective access: supports any metamodel & feature type (fix for, Step -> Action generalization)
+                EStructuralFeature _feat_[rel.relationshipName/] =
+                    classElem.eClass().getEStructuralFeature("[rel.relationshipName/]");
+                if (_feat_[rel.relationshipName/] == null) return false;
+                
+                Object _raw_[rel.relationshipName/] = classElem.eGet(_feat_[rel.relationshipName/]);
+                if (!(_raw_[rel.relationshipName/] instanceof EList<?>)) return false;
+                
+                EList<?> listOf[rel.relationshipName.toUpperFirst()/] = (EList<?>) _raw_[rel.relationshipName/];
+                
+                for (int [rel.relationshipName/]idx = [rel.relationshipName/]StartIdx;
+                     [rel.relationshipName/]idx < listOf[rel.relationshipName.toUpperFirst()/].size();
+                     [rel.relationshipName/]idx++) {
+                
+                    Object _item_ = listOf[rel.relationshipName.toUpperFirst()/].get([rel.relationshipName/]idx);
+                
+                    // Type refinement: only proceed if element IS the requested subclass
+                    if (!(_item_ instanceof [rel.className/])) {
+                        continue;
+                    }
+                    [rel.className/] [rel.className/][rel.relationshipName/]Elem = ([rel.className/]) _item_;
+
        
                 [else]
     
-                    [rel.className/] [rel.className/][rel.relationshipName/]Elem = classElem.get[rel.relationshipName.toUpperFirst()/]();
-                    if ([rel.className/][rel.relationshipName/]Elem == null) return false;
+                    EStructuralFeature _feat_[rel.relationshipName/] = classElem.eClass().getEStructuralFeature("[rel.relationshipName/]");
+                    if (_feat_[rel.relationshipName/] == null) return false;
+
+                    Object _obj_[rel.relationshipName/] = classElem.eGet(_feat_[rel.relationshipName/]);
+                    if (!(_obj_[rel.relationshipName/] instanceof [rel.className/])) {
+                            return false; // present but not the refined type
+                    }
+                    [rel.className/] [rel.className/][rel.relationshipName/]Elem = ([rel.className/]) _obj_[rel.relationshipName/];
+
                 
                 [/if]
                 
@@ -218,17 +243,28 @@ private static boolean matches[rel.className/][rel.relationshipName.toUpperFirst
                     
                     [if f.oclIsKindOf(Attribute)]
                         [let attr : Attribute = f.oclAsType(Attribute)]
-                            [attr.type/] [attr.type/][attr.attributeName/]Elem = [rel.className/][rel.relationshipName/]Elem.get[attr.attributeName.toUpperFirst()/]();
-                            if ([attr.type/][attr.attributeName/]Elem != null [if attr.value <> null] && [attr.type/][attr.attributeName/]Elem.equals("[attr.value/]")[/if]) {
+                            EStructuralFeature attrF_[attr.attributeName/] = [rel.className/][rel.relationshipName/]Elem.eClass().getEStructuralFeature("[attr.attributeName/]");
+                            Object attr_[attr.attributeName/] = (attrF_[attr.attributeName/] != null) ? [rel.className/][rel.relationshipName/]Elem.eGet(attrF_[attr.attributeName/]) : null;
+                            [if attr.value <> null]
+                            if (attr_[attr.attributeName/] != null && String.valueOf(attr_[attr.attributeName/]).equals("[attr.value/]")) {
                                 blockCounter += 1;
                             }
+                            [else]
+                            if (attr_[attr.attributeName/] != null) {
+                                blockCounter += 1;
+                            }
+                            [/if]
                         [/let]
                     [/if]
                     [if f.oclIsKindOf(Enumeration)]
                         [let en : Enumeration = f.oclAsType(Enumeration)]
-                            [en.type/] [en.type/][en.enumName/]Elem = [rel.className/][rel.relationshipName/]Elem.get[en.enumName.toUpperFirst()/]();
-                            if ([en.type/][en.enumName/]Elem != null && [en.type/][en.enumName/]Elem.getLiteral().equals("[en.value/]")) {
-                                blockCounter += 1;
+                            EStructuralFeature _ef_ = [rel.className/][rel.relationshipName/]Elem.eClass().getEStructuralFeature("[en.enumName/]");
+                            Object _ev_ = (_ef_ != null) ? [rel.className/][rel.relationshipName/]Elem.eGet(_ef_) : null;
+                            if (_ev_ != null) {
+                                String _lit_ = (_ev_ instanceof org.eclipse.emf.common.util.Enumerator) ? ((org.eclipse.emf.common.util.Enumerator)_ev_).getLiteral() : String.valueOf(_ev_);
+                                if ("[en.value/]".equals(_lit_)) {
+                                    blockCounter += 1;
+                                }
                             }
                         [/let]
                     [/if]
@@ -346,7 +382,7 @@ private static int printValidationIssues(Iterable<Issue> issues) {
 
 [template protected generateMainMethod(pattern : Pattern)]
 public static void main(String['[]'/] args) {
-     String datasetPath = "/Users/ankita/Desktop/sample_V3_dataset"; //V3_DatasetTest
+     String datasetPath = "/Users/ankita/Desktop/sample_V3_dataset"; //V3_DatasetTest_Valid
         String fileExtension = ".Pipeline"; // e.g. “.Pipeline” or whatever your DSL uses
         String outputNonMatching = "/Users/ankita/Desktop/Thesis-work/Generic M2T metrics/non_matching_files_all_files.txt";
         String outputInvalid = "/Users/ankita/Desktop/Thesis-work/Generic M2T metrics/invalid_files_all_files.txt";
