@@ -2,10 +2,8 @@ grammar org.xtext.example.pattern.Pattern with org.eclipse.xtext.common.Terminal
 
 generate pattern "http://www.xtext.org/example/pattern/Pattern"
 
-// Project path is path of a metamodel's grammar and is optional, but must appear before any root class and is useful/required in model to text transformation code in Java to import the Resourceloader for the (eg.xtext) metamodel and libraries for the target language of the dataset when finding metrics of occurrence of that pattern across the dataset 
-
 Pattern:
-    ('Project_Path' ':' projectPath=STRING)    // Accepts Project_path : "ca.mcgill.devops.pipeline"
+    ('Project_Path' ':' projectPath=STRING)
     rootClasses+=RootClass+;
 
 RootClass:
