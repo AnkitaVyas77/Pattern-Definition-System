@@ -4,21 +4,21 @@ generate pattern "http://www.xtext.org/example/pattern/Pattern"
 
 Pattern:
     ('Project_Path' ':' projectPath=STRING)
-    rootClasses+=RootClass+;
+    rootClass=RootClass;
 
 RootClass:
     rootName=ID '{'
-        relations+=Relation (',' relations+=Relation)*
+        features+=Feature (',' features+=Feature)*
     '}'
 ;
 
 
 Relation:
 	'(' className=ID ')' relationshipName=ID (isList?='*')? (isOrdered?='Ordered')?
-	'{' (featureList+=FeatureList)? (',' featureList+=FeatureList )* '}'
+	'{' (featureGroups+=FeatureGroup)? (',' featureGroups+=FeatureGroup )* '}'
 	;
  
-FeatureList:
+FeatureGroup:
 	'{' features+=Feature (',' features+=Feature)* '}' ;
 
 Feature:
@@ -33,15 +33,15 @@ Enumeration:
     '(' type=ID ')' enumName=ID ':' value=STRING
 ;
 
-PrimitiveType:
-    'String'  | 
-    'Boolean' | 
-    'Int'     |
-    'Long'    |
-    'Short'   |
-    'Byte'    |
-    'Float'   |
-    'Double'  |
-    'Char'    
+enum PrimitiveType:
+    String = 'String'  | 
+    Boolean = 'Boolean' | 
+    Int = 'Int'     |
+    Long = 'Long'    |
+    Short = 'Short'   |
+    Byte = 'Byte'    |
+    Float = 'Float'   |
+    Double = 'Double'  |
+    Char = 'Char'    
     
 ;

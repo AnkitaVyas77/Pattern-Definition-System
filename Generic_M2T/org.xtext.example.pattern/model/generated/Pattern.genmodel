@@ -6,23 +6,34 @@
     complianceLevel="17.0" copyrightFields="false" runtimeVersion="2.36">
   <genPackages prefix="Pattern" basePackage="org.xtext.example.pattern" disposableProviderFactory="true"
       fileExtensions="pattern" ecorePackage="Pattern.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Pattern.ecore#//PrimitiveType">
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/String"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Boolean"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Int"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Long"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Short"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Byte"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Float"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Double"/>
+      <genEnumLiterals ecoreEnumLiteral="Pattern.ecore#//PrimitiveType/Char"/>
+    </genEnums>
     <genClasses ecoreClass="Pattern.ecore#//Pattern">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pattern.ecore#//Pattern/projectPath"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//Pattern/rootClasses"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//Pattern/rootClass"/>
     </genClasses>
     <genClasses ecoreClass="Pattern.ecore#//RootClass">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pattern.ecore#//RootClass/rootName"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//RootClass/relations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//RootClass/features"/>
     </genClasses>
     <genClasses ecoreClass="Pattern.ecore#//Relation">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pattern.ecore#//Relation/className"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pattern.ecore#//Relation/relationshipName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pattern.ecore#//Relation/isList"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Pattern.ecore#//Relation/isOrdered"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//Relation/featureList"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//Relation/featureGroups"/>
     </genClasses>
-    <genClasses ecoreClass="Pattern.ecore#//FeatureList">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//FeatureList/features"/>
+    <genClasses ecoreClass="Pattern.ecore#//FeatureGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Pattern.ecore#//FeatureGroup/features"/>
     </genClasses>
     <genClasses ecoreClass="Pattern.ecore#//Feature"/>
     <genClasses ecoreClass="Pattern.ecore#//Attribute">
