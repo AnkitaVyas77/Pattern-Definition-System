@@ -1,0 +1,22 @@
+Project_Path : "ca.mcgill.devops.pipeline"
+Pipeline { 
+         
+    (Event)triggers* { 
+        
+        
+        {
+            (String)workflowTypeKW : "workflow_call:",
+            (Activity)workFlowActivities* {
+            
+            {
+            (String)name : "inputs:"
+            }
+            
+            }
+            
+        }
+    }
+    
+
+}
+

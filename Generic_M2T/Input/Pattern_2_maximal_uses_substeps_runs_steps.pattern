@@ -1,0 +1,45 @@
+Project_Path : "ca.mcgill.devops.pipeline" // LOCATION OF THE PROJECT
+Pipeline { 
+    (Configuration)pipelineConfiguration{
+        {
+            (String)name
+            
+        
+        }
+    },
+    
+    (Job)jobs* {
+        {
+            (String)name : "build",
+            (ParameterValue)jobParameterValues* {
+            
+                {
+                    (PipelineKeyword)name: "runs-on:"
+            
+                }
+                
+                
+                
+            },
+            (Step) steps * {
+            {
+            (Action) subSteps* {
+                
+                {
+                    (PipelineKeyword) actionKeyword: "uses:"
+                    
+                    
+                }
+                }
+            },
+            {
+                (String)name: "run:"
+            }
+                
+            }
+            
+        }
+                
+    }
+        
+}

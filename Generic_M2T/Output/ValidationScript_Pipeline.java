@@ -38,20 +38,20 @@ private static boolean matchesPattern(EObject root) {
 
 private static boolean matchesPatternPipeline(Pipeline root) {
     return 
-      matchesStageStages_1(root) 
+      matchesEventTriggers_1(root) 
  ;
 }
   
 
     //template protected generateRelationMethods(rel : Relation, className : String)]
-    //Relation: Stages
-    private static boolean matchesStageStages_1(Pipeline classElem ) {
-        boolean hasStages = false;
+    //Relation: triggers
+    private static boolean matchesEventTriggers_1(Pipeline classElem ) {
+        boolean hastriggers = false;
         
         
             int matchedBlocks = 0;
             
-             List<Integer> StagesMatchedIdx = new ArrayList<>(); 
+             List<Integer> triggersMatchedIdx = new ArrayList<>(); 
     
     
                  {
@@ -59,38 +59,64 @@ private static boolean matchesPatternPipeline(Pipeline root) {
     
                     
                     
-                        int StagesStartIdx = 0;
+                        int triggersStartIdx = 0;
     
     
-                        List<Stage> listOfStages = classElem.getStages();
-        
-                        for (int Stagesidx = StagesStartIdx; Stagesidx < listOfStages.size(); Stagesidx++) {
-                        Stage StageStagesElem = listOfStages.get(Stagesidx);
+                        // Reflective access: supports any metamodel & feature type (fix for, Step -> Action generalization)
+                    EStructuralFeature _feat_triggers =
+                        classElem.eClass().getEStructuralFeature("triggers");
+                    if (_feat_triggers == null) return false;
+                    
+                    Object _raw_triggers = classElem.eGet(_feat_triggers);
+                    if (!(_raw_triggers instanceof EList<?>)) return false;
+                    
+                    EList<?> listOfTriggers = (EList<?>) _raw_triggers;
+                    
+                    for (int triggersidx = triggersStartIdx;
+                         triggersidx < listOfTriggers.size();
+                         triggersidx++) {
+                    
+                        Object _item_ = listOfTriggers.get(triggersidx);
+                    
+                        // Type refinement: only proceed if element IS the requested subclass
+                        if (!(_item_ instanceof Event)) {
+                            continue;
+                        }
+                        Event EventtriggersElem = (Event) _item_;
+    
            
                     
     
                     int blockCounter = 0;
                     //ind += 1 ;
     
-                     if (!(StagesMatchedIdx.contains(Stagesidx)))  { 
+                     if (!(triggersMatchedIdx.contains(triggersidx)))  { 
                     
     
                     
+                        
+                                EStructuralFeature attrF_workflowTypeKW = EventtriggersElem.eClass().getEStructuralFeature("workflowTypeKW");
+                                Object attr_workflowTypeKW = (attrF_workflowTypeKW != null) ? EventtriggersElem.eGet(attrF_workflowTypeKW) : null;
+                                if (attr_workflowTypeKW != null && String.valueOf(attr_workflowTypeKW).equals("workflow_call:")) {
+                                    blockCounter += 1;
+                                }
+                        
+                        
                         
                             
                                 
     
                                 // **CALL** the nested match function with the same childSuffix the declaration uses:
-                                if ( matchesJobJobs_1_1(StageStagesElem) ) {
+                                if ( matchesActivityWorkFlowActivities_1_1(EventtriggersElem) ) {
           
                                 blockCounter++;
                             }
                         
                         
     
-                    if (blockCounter == 1) {
+                    if (blockCounter == 2) {
                         matchedBlocks++;
-                             StagesMatchedIdx.add(Stagesidx);
+                             triggersMatchedIdx.add(triggersidx);
                         
      break; 
                             }                        
@@ -100,26 +126,26 @@ private static boolean matchesPatternPipeline(Pipeline root) {
     
             
             if (matchedBlocks == 1) {
-                hasStages = true;
+                hastriggers = true;
                 
             }
         
     
-        return hasStages; 
+        return hastriggers; 
     
     }
           
   
   
               //template protected generateRelationMethods(rel : Relation, className : String)]
-              //Relation: Jobs
-              private static boolean matchesJobJobs_1_1(Stage classElem ) {
-                  boolean hasJobs = false;
+              //Relation: workFlowActivities
+              private static boolean matchesActivityWorkFlowActivities_1_1(Event classElem ) {
+                  boolean hasworkFlowActivities = false;
                   
                   
                       int matchedBlocks = 0;
                       
-                       List<Integer> JobsMatchedIdx = new ArrayList<>(); 
+                       List<Integer> workFlowActivitiesMatchedIdx = new ArrayList<>(); 
               
               
                            {
@@ -127,45 +153,53 @@ private static boolean matchesPatternPipeline(Pipeline root) {
               
                               
                               
-                                  int JobsStartIdx = 0;
+                                  int workFlowActivitiesStartIdx = 0;
               
               
-                                  List<Job> listOfJobs = classElem.getJobs();
-                  
-                                  for (int Jobsidx = JobsStartIdx; Jobsidx < listOfJobs.size(); Jobsidx++) {
-                                  Job JobJobsElem = listOfJobs.get(Jobsidx);
+                                  // Reflective access: supports any metamodel & feature type (fix for, Step -> Action generalization)
+                              EStructuralFeature _feat_workFlowActivities =
+                                  classElem.eClass().getEStructuralFeature("workFlowActivities");
+                              if (_feat_workFlowActivities == null) return false;
+                              
+                              Object _raw_workFlowActivities = classElem.eGet(_feat_workFlowActivities);
+                              if (!(_raw_workFlowActivities instanceof EList<?>)) return false;
+                              
+                              EList<?> listOfWorkFlowActivities = (EList<?>) _raw_workFlowActivities;
+                              
+                              for (int workFlowActivitiesidx = workFlowActivitiesStartIdx;
+                                   workFlowActivitiesidx < listOfWorkFlowActivities.size();
+                                   workFlowActivitiesidx++) {
+                              
+                                  Object _item_ = listOfWorkFlowActivities.get(workFlowActivitiesidx);
+                              
+                                  // Type refinement: only proceed if element IS the requested subclass
+                                  if (!(_item_ instanceof Activity)) {
+                                      continue;
+                                  }
+                                  Activity ActivityworkFlowActivitiesElem = (Activity) _item_;
+              
                      
                               
               
                               int blockCounter = 0;
                               //ind += 1 ;
               
-                               if (!(JobsMatchedIdx.contains(Jobsidx)))  { 
+                               if (!(workFlowActivitiesMatchedIdx.contains(workFlowActivitiesidx)))  { 
                               
               
                               
                                   
-                                          String StringnameElem = JobJobsElem.getName();
-                                          if (StringnameElem != null  && StringnameElem.equals("deploy")) {
+                                          EStructuralFeature attrF_name = ActivityworkFlowActivitiesElem.eClass().getEStructuralFeature("name");
+                                          Object attr_name = (attrF_name != null) ? ActivityworkFlowActivitiesElem.eGet(attrF_name) : null;
+                                          if (attr_name != null && String.valueOf(attr_name).equals("inputs:")) {
                                               blockCounter += 1;
                                           }
                                   
                                   
-                                  
-                                      
-                                          
               
-                                          // **CALL** the nested match function with the same childSuffix the declaration uses:
-                                          if ( matchesParameterValueJobParameterValues_1_1_1(JobJobsElem) ) {
-                    
-                                          blockCounter++;
-                                      }
-                                  
-                                  
-              
-                              if (blockCounter == 2) {
+                              if (blockCounter == 1) {
                                   matchedBlocks++;
-                                       JobsMatchedIdx.add(Jobsidx);
+                                       workFlowActivitiesMatchedIdx.add(workFlowActivitiesidx);
                                   
                break; 
                                       }                        
@@ -175,81 +209,15 @@ private static boolean matchesPatternPipeline(Pipeline root) {
               
                       
                       if (matchedBlocks == 1) {
-                          hasJobs = true;
+                          hasworkFlowActivities = true;
                           
                       }
                   
               
-                  return hasJobs; 
+                  return hasworkFlowActivities; 
               
               }
                
-            
-            
-                        //template protected generateRelationMethods(rel : Relation, className : String)]
-                        //Relation: JobParameterValues
-                        private static boolean matchesParameterValueJobParameterValues_1_1_1(Job classElem ) {
-                            boolean hasJobParameterValues = false;
-                            
-                            
-                                int matchedBlocks = 0;
-                                
-                                 List<Integer> JobParameterValuesMatchedIdx = new ArrayList<>(); 
-                        
-                        
-                                     {
-                                        //int ind =0;
-                        
-                                        
-                                        
-                                            int JobParameterValuesStartIdx = 0;
-                        
-                        
-                                            List<ParameterValue> listOfJobParameterValues = classElem.getJobParameterValues();
-                            
-                                            for (int JobParameterValuesidx = JobParameterValuesStartIdx; JobParameterValuesidx < listOfJobParameterValues.size(); JobParameterValuesidx++) {
-                                            ParameterValue ParameterValueJobParameterValuesElem = listOfJobParameterValues.get(JobParameterValuesidx);
-                               
-                                        
-                        
-                                        int blockCounter = 0;
-                                        //ind += 1 ;
-                        
-                                         if (!(JobParameterValuesMatchedIdx.contains(JobParameterValuesidx)))  { 
-                                        
-                        
-                                        
-                                            
-                                                    PipelineKeyword PipelineKeywordnameElem = ParameterValueJobParameterValuesElem.getName();
-                                                    if (PipelineKeywordnameElem != null && PipelineKeywordnameElem.getLiteral().equals("name:")) {
-                                                        blockCounter += 1;
-                                                    }
-                                            
-                                            
-                        
-                                        if (blockCounter == 1) {
-                                            matchedBlocks++;
-                                                 JobParameterValuesMatchedIdx.add(JobParameterValuesidx);
-                                            
-                         break; 
-                                                }                        
-                                            }
-                                        }
-                                     } 
-                        
-                                
-                                if (matchedBlocks == 1) {
-                                    hasJobParameterValues = true;
-                                    
-                                }
-                            
-                        
-                            return hasJobParameterValues; 
-                        
-                        }
-                         
-                                 
-            
                        
   
                   
@@ -302,7 +270,7 @@ private static int printValidationIssues(Iterable<Issue> issues) {
 }
 
 public static void main(String[] args) {
-     String datasetPath = "/Users/ankita/Desktop/sample_V3_dataset"; //V3_DatasetTest
+     String datasetPath = "/Users/ankita/Desktop/sample_V3_dataset"; //V3_DatasetTest_Valid
         String fileExtension = ".Pipeline"; // e.g. “.Pipeline” or whatever your DSL uses
         String outputNonMatching = "/Users/ankita/Desktop/Thesis-work/Generic M2T metrics/non_matching_files_all_files.txt";
         String outputInvalid = "/Users/ankita/Desktop/Thesis-work/Generic M2T metrics/invalid_files_all_files.txt";

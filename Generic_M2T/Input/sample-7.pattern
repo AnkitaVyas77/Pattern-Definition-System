@@ -1,0 +1,18 @@
+
+Pipeline {
+  (Job) jobs * {
+    {
+      (String) name: "build",
+      (Step) steps * {
+        {
+          (Action) subSteps * {
+            {
+              (PipelineKeyword) actionKeyword: "uses:",
+              (String) actionValue: "actions/checkout@v2"
+            }
+          }
+        }
+      }
+    }
+  }
+}

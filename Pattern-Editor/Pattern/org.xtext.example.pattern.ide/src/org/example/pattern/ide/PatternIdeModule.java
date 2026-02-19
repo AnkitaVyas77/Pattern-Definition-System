@@ -3,7 +3,6 @@
  */
 package org.example.pattern.ide;
 
-import org.xtext.example.pattern.ide.AbstractPatternIdeModule;
 
 /**
  * Use this class to register ide components.

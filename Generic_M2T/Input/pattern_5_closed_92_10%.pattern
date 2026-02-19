@@ -1,0 +1,47 @@
+Project_Path : "ca.mcgill.devops.pipeline" // LOCATION OF THE PROJECT
+Pipeline { 
+    (Configuration)pipelineConfiguration{
+        {
+            (String)name
+            
+        
+        }
+    },
+    (Event)triggers* { 
+         
+        {
+            (PipelineEventKeyword)name : "push:"      
+            
+        }
+        
+    },
+    
+    (Job)jobs* {
+        {
+            (String)name : "build",
+            (ParameterValue)jobParameterValues* {
+            
+                {
+                    (PipelineKeyword)name: "runs-on:",
+                    (String)value : "ubuntu-latest"
+            
+                }
+                
+                
+                
+            },
+            (Step)steps* {
+                
+                    
+            }
+        }
+    }
+        
+        
+}
+
+
+
+
+//eq:jobs.build.runs-on==ubuntu-latest & exists:jobs.build & exists:jobs.build.runs-on & exists:jobs.build.steps & exists:jobs.build.steps.[] & exists:name & exists:on.push
+

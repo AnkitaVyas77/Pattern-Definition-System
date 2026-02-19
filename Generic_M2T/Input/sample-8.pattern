@@ -1,0 +1,13 @@
+Project_Path: "ca.mcgill.devops.pipeline"
+Pipeline {
+  (Job) jobs * {
+    {
+      (String) name: "build",
+      (Step) steps * {
+        
+        }
+        
+      }
+    }
+  }
+

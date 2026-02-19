@@ -1,42 +1,44 @@
 Project_Path : "ca.mcgill.devops.pipeline" // LOCATION OF THE PROJECT
 Pipeline { 
 
-	
-	(Job)Jobs* {
-		{
-			(String)name,
-			(String)dependKW,
-		
-			(ParameterValue)JobParameterValues* {
-			
-			 	{
-			 		(PipelineKeyword)name: "runs-on"
-			
-				},
-				{
-					(PipelineKeyword)name: "name"
-				},
-				{
-			 		
-					(PipelineKeyword)name: "if"
-					
-				}
-				
-				
-			 	
-			},
-			(Step)steps* {
-			 
-			}
-		}		
-	}
-		
+    
+    (Job)jobs* {
+        {
+            (String)name,
+            (String)dependKW,
+        
+            (ParameterValue)jobParameterValues* Ordered{
+            
+                {
+                    (PipelineKeyword)name: "name:"
+            
+                },
+                {
+                    (PipelineKeyword)name: "runs-on:"
+                },
+                {
+                    
+                    (PipelineKeyword)name: "if:"
+                    
+                }
+                
+                
+                
+            },
+            (Step)steps* {
+             
+            }
+        }
+                
+    }
+        
 }
-		
-	
+
+        
+    
 
  
 
-	
+    
 
 
