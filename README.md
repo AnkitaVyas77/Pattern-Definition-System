@@ -4,4 +4,4 @@ Pattern-Definition-System includes Xtext based Pattern Definition Language and A
 
 ## Metamodel
 Concrete Representation of PDL
-![Metamodel](metamodel_image.png)
+![Metamodel](PDL_metamodel_diagram.png)
