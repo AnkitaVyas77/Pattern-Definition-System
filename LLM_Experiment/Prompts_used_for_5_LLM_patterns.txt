@@ -1,0 +1,78 @@
+All prompts used for fetching the patterns found by LLM experiment:
+
+Pattern 1 Prompt:
+
+Below given are DevOps YAML pipeline files, your task is:
+- Analyze these YAML pipelines to identify the most commonly recurring minimal structure of keywords.
+- Provide only the YAML keyword-level skeleton pattern. Represent all associated values simply as "value".
+- Do not include detailed hierarchical structures inside keywords. For example, if "steps" or any keyword appears, represent it simply as `steps: "value"`, without showing further nested items.
+Respond directly with the minimal YAML skeleton keyword structure pattern, exactly as requested, without explanations, hierarchical 
+   details, or additional commentary.
+   
+Pattern 2 Prompt:
+   
+ Below given are DevOps YAML pipeline files, your task is:
+- Analyze these YAML pipelines to identify the most commonly recurring minimal structure of keywords.
+- Provide only the YAML keyword-level skeleton pattern. Represent all associated values simply as "value".
+- Do not include detailed hierarchical structures inside keywords. For example, if "steps" or any keyword appears, represent it simply as `steps: "value"`, without showing further nested items.
+Respond directly with the minimal YAML skeleton keyword structure pattern, exactly as requested, without explanations, hierarchical 
+   details, or additional commentary.
+   
+Pattern 3 Prompt:
+   
+   You are analyzing a dataset of actual DevOps YAML pipeline files. Your task is to identify recurring STRUCTURAL PATTERNS from the provided pipeline file contents. Definition of a structural pattern:
+A structural pattern is a repeated YAML configuration shape or repeated arrangement of keys, nested blocks, job definitions, trigger definitions, step structures, dependency structures, conditions, reusable references, variables, stages, or execution settings that appears across multiple files.
+Important grounding rules:
+- Use ONLY the provided pipeline file contents as evidence.
+- Do NOT invent fields, values, triggers, runners, tasks, jobs, or stages that are not supported by the input.
+- Do NOT rely on generic prior knowledge of GitHub Actions or Azure DevOps unless it is directly supported by the provided files.
+- If a pattern is inferred by abstraction, clearly say so.
+- If evidence is weak, mark that pattern as uncertain.
+- Do NOT include illustrative example values unless they actually occur in the input.
+What to look for:
+- Repeated DevOps structure and functions across CI/CD pipeline files
+- Repeated combinations of fields, not just single keys
+- Repeated nested arrangements and co-occurring elements
+For each discovered pattern, provide:
+1.Top most commonly occurring pattern in given CI/CD pipeline files, and output in format of YAML structure.
+Now analyze the following pipeline file contents:
+   
+Pattern 4 Prompt:
+   
+   You are analyzing a dataset of actual DevOps YAML pipeline files. Your task is to identify recurring STRUCTURAL PATTERNS from the provided pipeline file contents. Definition of a structural pattern:
+A structural pattern is a repeated YAML configuration shape or repeated arrangement of keys, nested blocks, job definitions, trigger definitions, step structures, dependency structures, conditions, reusable references, variables, stages, or execution settings that appears across multiple files.
+Important grounding rules:
+- Use ONLY the provided pipeline file contents as evidence.
+- Do NOT invent fields, values, triggers, runners, tasks, jobs, or stages that are not supported by the input.
+- Do NOT rely on generic prior knowledge of GitHub Actions or Azure DevOps unless it is directly supported by the provided files.
+- If a pattern is inferred by abstraction, clearly say so.
+- If evidence is weak, mark that pattern as uncertain.
+- Do NOT include illustrative example values unless they actually occur in the input.
+What to look for:
+- Repeated DevOps structure and functions across CI/CD pipeline files
+- Repeated combinations of fields, not just single keys
+- Repeated nested arrangements and co-occurring elements
+For each discovered pattern, provide:
+1.Top most commonly occurring pattern in given CI/CD pipeline files, and output in format of YAML structure.
+Now analyze the following pipeline file contents:
+   
+Pattern 5 Prompt:
+   
+   You are analyzing a dataset of actual DevOps YAML pipeline files. Your task is to identify recurring STRUCTURAL PATTERNS from the provided pipeline file contents. Definition of a structural pattern:
+A structural pattern is a repeated YAML configuration shape or repeated arrangement of keys, nested blocks, job definitions, trigger definitions, step structures, dependency structures, conditions, reusable references, variables, stages, or execution settings that appears across multiple files.
+Important grounding rules:
+- Use ONLY the provided pipeline file contents as evidence.
+- Do NOT invent fields, values, triggers, runners, tasks, jobs, or stages that are not supported by the input.
+- Do NOT rely on generic prior knowledge of GitHub Actions or Azure DevOps unless it is directly supported by the provided files.
+- If a pattern is inferred by abstraction, clearly say so.
+- If evidence is weak, mark that pattern as uncertain.
+- Do NOT include illustrative example values unless they actually occur in the input.
+What to look for:
+- Repeated DevOps structure and functions across CI/CD pipeline files
+- Repeated combinations of fields, not just single keys
+- Repeated nested arrangements and co-occurring elements
+For each discovered pattern, provide:
+1.Top 3 most commonly occurring pattern of YAML structure in given CI/CD pipeline files, and output in format of YAML structure.
+Now analyze the following pipeline file contents:
+   
+   

@@ -1,5 +1,6 @@
 Project_Path : "ca.mcgill.devops.pipeline" // LOCATION OF THE PROJECT
 Pipeline { 
+
     (Configuration)pipelineConfiguration{
         {
             (String)name
@@ -22,6 +23,7 @@ Pipeline {
         }
         
     }
+    
         
 }
 

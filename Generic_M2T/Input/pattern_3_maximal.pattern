@@ -1,5 +1,6 @@
 Project_Path : "ca.mcgill.devops.pipeline"
 Pipeline { 
+{
          
     (Event)triggers* { 
         
@@ -16,7 +17,7 @@ Pipeline {
             
         }
     }
-    
+ }   
 
 }
 

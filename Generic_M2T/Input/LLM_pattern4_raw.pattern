@@ -1,0 +1,49 @@
+Project_Path : "ca.mcgill.devops.pipeline"
+Pipeline { 
+  (Configuration)pipelineConfiguration{
+    {
+      (String)name
+    }
+  },
+  (Event)triggers* Ordered{ 
+    {
+      (PipelineEventKeyword)name : "push:",
+      (Branch)includedBranches* {
+      }
+    },
+    {
+      (PipelineEventKeyword)name : "pull_request:"
+    }
+  },
+  (Job)jobs* {
+    {
+      (String)name : "build",
+      (ParameterValue)jobParameterValues* {
+        {
+          (PipelineKeyword)name: "runs-on:"
+        } 
+      },
+      (Step)steps* Ordered{
+        {
+          (PipelineKeyword)actionKeyword: "uses:"
+        },
+        {
+          (PipelineKeyword)actionKeyword: "name:",
+          (Script) subSteps*{
+            {
+              (String)name: "run:"
+            }
+          }
+        },
+        {
+          (PipelineKeyword)actionKeyword: "name:",
+          (Script)subSteps*{
+            {
+              (String)name: "run:"
+            }
+          }
+        }
+      }
+    } 
+  }
+}
