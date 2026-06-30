@@ -8,8 +8,6 @@ Concrete Representation of PDL
 
 ## Evaluation Results
 
-## Evaluation Results
-
 The Table below summarizes the occurrence and filename-level agreement metrics for the data mining-based, ordered, and LLM-found patterns evaluated in the paper.
 
 <table>
